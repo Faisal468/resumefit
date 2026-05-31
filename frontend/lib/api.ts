@@ -4,7 +4,7 @@ import type { AnalysisResult, ResumeHistoryItem, TemplateMeta } from '@/types';
 const BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
 const api = axios.create({
-  baseURL: BASE,
+  baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000',
   timeout: 120000,
   withCredentials: true, // send httpOnly cookie on every request
 });
