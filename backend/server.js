@@ -17,6 +17,9 @@ const logger = require('./utils/logger');
 
 const app = express();
 
+// Trust proxy for correct client IPs and secure cookies when behind a proxy (e.g., Vercel)
+app.set('trust proxy', 1);
+
 // Security headers
 app.use(helmet());
 
