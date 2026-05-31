@@ -20,10 +20,23 @@ const app = express();
 // Security headers
 app.use(helmet());
 
-// CORS — credentials required for httpOnly cookie auth
+// CORS — accept localhost, the configured origin, and any *.vercel.app deploy
+const allowedOrigins = [
+  'http://localhost:3000',
+  process.env.CORS_ORIGIN,
+].filter(Boolean);
+
 app.use(
   cors({
-    origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
+    origin: (origin, callback) => {
+      // Allow requests with no origin (Postman, curl, server-to-server)
+      if (!origin) return callback(null, true);
+      // Allow listed origins and any vercel.app subdomain
+      if (allowedOrigins.includes(origin) || origin.endsWith('.vercel.app')) {
+        return callback(null, true);
+      }
+      return callback(new Error('CORS blocked: ' + origin));
+    },
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
